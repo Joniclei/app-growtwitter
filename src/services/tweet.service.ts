@@ -1,8 +1,12 @@
 import createError from 'http-errors'
 import { TweetRepository } from '../repositories/tweet.repository'
+import { LikeRepository } from '../repositories/like.repository'
 
 export class TweetService {
-  constructor(private tweetRepository: TweetRepository) {}
+  constructor(
+    private tweetRepository: TweetRepository,
+    private likeRepository: LikeRepository
+  ) {}
 
   create = async (data: { content: string; userId: string }) => {
     return this.tweetRepository.create(data)
@@ -18,5 +22,15 @@ export class TweetService {
 
   feed = async (userId: string) => {
     return this.tweetRepository.findFeed(userId)
+  }
+
+  like = async (data: { userId: string; tweetId: string }) => {
+    const tweet = await this.tweetRepository.findById(data.tweetId)
+    if (!tweet) throw createError(404, 'Tweet não encontrado')
+    return this.likeRepository.create(data)
+  }
+
+  unlike = async (data: { userId: string; tweetId: string }) => {
+    return this.likeRepository.delete(data)
   }
 }
