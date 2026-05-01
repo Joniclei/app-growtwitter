@@ -24,4 +24,18 @@ export class TweetController {
     const tweets = await this.tweetService.feed(userId)
     return res.status(200).json(tweets)
   }
+
+  like = async (req: Request, res: Response) => {
+    const userId = req.user.id
+    const tweetId = req.params.id as string
+    await this.tweetService.like({ userId, tweetId })
+    return res.status(204).send()
+  }
+
+  unlike = async (req: Request, res: Response) => {
+    const userId = req.user.id
+    const tweetId = req.params.id as string
+    await this.tweetService.unlike({ userId, tweetId })
+    return res.status(204).send()
+  }
 }
