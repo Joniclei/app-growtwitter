@@ -19,9 +19,15 @@ export class TweetRepository {
     return this.prisma.tweet.findUnique({ where: { id } })
   }
 
-  findFeed = async (userIds: string[]) => {
+  findFeed = async (userId: string) => {
     return this.prisma.tweet.findMany({
-      where: { userId: { in: userIds }, type: 'TWEET' },
+      where: {
+        type: 'TWEET',
+        OR: [
+          { userId },
+          { user: { followers: { some: { followerId: userId } } } },
+        ],
+      },
       orderBy: { createdAt: 'desc' },
       include: { user: { select: { id: true, name: true, username: true, avatarUrl: true } } },
     })
