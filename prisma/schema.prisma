@@ -1,3 +1,7 @@
+
+
+//MODELAGEM
+// https://dbdiagram.io/d/growtwiter-69f01132ddb9320fdc6e43d2
 generator client {
   provider = "prisma-client-js"
 }
